@@ -1,23 +1,34 @@
 const express = require('express');
 const path = require('path');
 const { MongoClient } = require('mongodb');
-require('dotenv').config(); // Cargar archivo .env
+require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Cliente MongoDB Atlas
+// MongoDB Atlas - Conexión persistente
 const client = new MongoClient(process.env.MONGODB_URI);
+let db;
+
+// 👉 Conexión única al iniciar el servidor
+async function conectarDB() {
+  try {
+    await client.connect();
+    db = client.db(); // Usa la base de datos por defecto de la URI
+    console.log('✅ Conectado a MongoDB Atlas');
+  } catch (err) {
+    console.error('❌ Error al conectar a MongoDB:', err);
+    process.exit(1); // Detiene la app si falla la conexión
+  }
+}
 
 // 👉 Ruta: Obtener todos los alumnos
 app.get('/api/alumnos', async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db(); // Usa la base de datos de la URI
     const alumnos = await db.collection('proyecto').find().toArray();
     res.json(alumnos);
   } catch (err) {
@@ -29,11 +40,9 @@ app.get('/api/alumnos', async (req, res) => {
 // 👉 Ruta: Alta de un nuevo alumno
 app.post('/api/alumnos', async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db();
     const col = db.collection('proyecto');
-
     const nuevo = req.body;
+
     if (!nuevo.nombre || !nuevo.carrera || !nuevo.tipoResiduo || !nuevo.cantidadKg || !nuevo.semestre) {
       return res.status(400).json({ error: 'Campos incompletos' });
     }
@@ -53,8 +62,6 @@ app.post('/api/alumnos', async (req, res) => {
 // 👉 Ruta: Eliminar alumno por ID
 app.delete('/api/alumnos/:id', async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db();
     const resultado = await db.collection('proyecto').deleteOne({ id: req.params.id });
 
     if (resultado.deletedCount === 0) {
@@ -71,8 +78,6 @@ app.delete('/api/alumnos/:id', async (req, res) => {
 // 👉 Ruta: Actualizar alumno por ID
 app.put('/api/alumnos/:id', async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db();
     const actualizado = req.body;
 
     const result = await db.collection('proyecto').updateOne(
@@ -96,7 +101,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 🟢 Iniciar servidor
-app.listen(port, () => {
-  console.log(`✅ Servidor corriendo en: http://localhost:${port}`);
+// 🟢 Conectar a DB y levantar servidor
+conectarDB().then(() => {
+  app.listen(port, () => {
+    console.log(`🚀 Servidor en: http://localhost:${port}`);
+  });
 });
