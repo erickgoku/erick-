@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Visualizar Registros</title>
+  <style>
+    body {
+      background-color: #e8f0fe;
+      font-family: Arial, sans-serif;
+      color: #003366;
+      padding: 20px;
+    }
+    h2 {
+      color: #1a237e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #90caf9;
+      text-align: left;
+    }
+    th {
+      background-color: #1976d2;
+      color: white;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #1976d2;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Visualización de Alumnos</h2>
+  <table id="tabla">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Carrera</th>
+        <th>Residuo</th>
+        <th>Cantidad (kg)</th>
+        <th>Semestre</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <a href="index.html">Volver al menú</a>
+
+  <script>
+    fetch('/api/alumnos')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector('#tabla tbody');
+        data.forEach(a => {
+          const fila = document.createElement('tr');
+          fila.innerHTML = `
+            <td>${a.id}</td>
+            <td>${a.nombre}</td>
+            <td>${a.carrera}</td>
+            <td>${a.tipoResiduo}</td>
+            <td>${a.cantidadKg}</td>
+            <td>${a.semestre}</td>
+          `;
+          tbody.appendChild(fila);
+        });
+      })
+      .catch(err => {
+        alert("Error al cargar datos");
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
