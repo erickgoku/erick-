@@ -104,6 +104,7 @@ app.get('/', (req, res) => {
 // 🟢 Conectar a DB y levantar servidor
 conectarDB().then(() => {
   app.listen(port, () => {
-    console.log(`🚀 Servidor en: http://localhost:${port}`);
+console.log(`🚀 Servidor en puerto: ${port}`);
+
   });
 });
