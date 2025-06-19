@@ -18,11 +18,11 @@ let db;
 async function conectarDB() {
   try {
     await client.connect();
-    db = client.db(); // Usa la base de datos por defecto de la URI
+    db = client.db("paec"); // 👈 usa la base de datos correcta
     console.log('✅ Conectado a MongoDB Atlas');
   } catch (err) {
     console.error('❌ Error al conectar a MongoDB:', err);
-    process.exit(1); // Detiene la app si falla la conexión
+    process.exit(1);
   }
 }
 
@@ -104,7 +104,7 @@ app.get('/', (req, res) => {
 // 🟢 Conectar a DB y levantar servidor
 conectarDB().then(() => {
   app.listen(port, () => {
-console.log(`🚀 Servidor en puerto: ${port}`);
-
+    console.log(`🚀 Servidor en puerto: ${port}`);
   });
 });
+
