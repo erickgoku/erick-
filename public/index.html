@@ -2,88 +2,54 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>PAEC - Erick</title>
+  <title>Proyecto del PAEC - Erick</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #e3f2fd;
       color: #0d47a1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      background-color: #ffffff;
       padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      max-width: 600px;
-      width: 100%;
-      text-align: center;
     }
-    h1, h2 {
+    h1 {
       color: #0d47a1;
+      margin-bottom: 10px;
     }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: 1px solid #90caf9;
-      border-radius: 5px;
+    h2 {
+      color: #1565c0;
+      margin-bottom: 30px;
     }
-    button {
-      background-color: #1976d2;
-      color: white;
+    p {
       font-weight: bold;
-      border: none;
-      cursor: pointer;
+      margin-bottom: 30px;
     }
-    button:hover {
-      background-color: #1565c0;
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
     a {
-      display: inline-block;
-      margin-top: 20px;
-      color: #1976d2;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #bbdefb;
-      text-align: left;
-    }
-    th {
+      padding: 12px 20px;
       background-color: #1976d2;
       color: white;
-    }
-    #msg {
-      margin-top: 15px;
+      text-decoration: none;
+      border-radius: 8px;
+      width: fit-content;
       font-weight: bold;
+    }
+    a:hover {
+      background-color: #1565c0;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    
-    <h1>Proyecto del PAEC - Erick</h1>
-    <h2>Criterio B: Monitorear la participación comunitaria</h2>
-    <p><strong>Subcriterios:</strong> 1. Datos de participantes. 2. Aportes con filtro (kilos, fechas, lugar).</p>
-    <div class="menu">
-      <a href="alta.html"><button>Alta de Residuo</button></a>
-      <a href="baja.html"><button>Baja de Residuo</button></a>
-      <a href="actualizar.html"><button>Actualizar Datos</button></a>
-      <a href="visualizar.html"><button>Visualizar Registros</button></a>
-    </div>
-    
+  <h1>Proyecto del PAEC - Erick</h1>
+  <h2>Criterio B: Monitorear la participación comunitaria</h2>
+  <p>Subcriterios: 1. Datos de participantes. 2. Aportes con filtro (kilos, fechas, lugar).</p>
+  <div class="menu">
+    <a href="alta.html">Alta de Residuo</a>
+    <a href="baja.html">Baja de Residuo</a>
+    <a href="actualizar.html">Actualizar Datos</a>
+    <a href="visualizar.html">Visualizar Registros</a>
   </div>
 </body>
 </html>

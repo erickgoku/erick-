@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>PAEC - Erick</title>
+  <meta charset="UTF-8">
+  <title>Visualización de Residuos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,45 +11,19 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
     .container {
       background-color: #ffffff;
       padding: 40px;
       border-radius: 15px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      max-width: 600px;
+      max-width: 900px;
       width: 100%;
+    }
+    h2 {
       text-align: center;
-    }
-    h1, h2 {
       color: #0d47a1;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: 1px solid #90caf9;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #1976d2;
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1565c0;
-    }
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      color: #1976d2;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
     }
     table {
       width: 100%;
@@ -65,6 +39,15 @@
       background-color: #1976d2;
       color: white;
     }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      color: #1976d2;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
     #msg {
       margin-top: 15px;
       font-weight: bold;
@@ -73,7 +56,6 @@
 </head>
 <body>
   <div class="container">
-    
     <h2>Visualización de Residuos</h2>
     <table id="tabla">
       <thead>
@@ -91,36 +73,38 @@
     </table>
     <p id="msg"></p>
     <a href="index.html">Volver al menú</a>
-    <script>
-      fetch('/api/residuos')
-        .then(res => res.json())
-        .then(data => {{
-          const tbody = document.querySelector('#tabla tbody');
-          const msg = document.getElementById('msg');
-          if (data.length === 0) {{
-            msg.textContent = "No hay residuos registrados.";
-            return;
-          }}
-          data.forEach(r => {{
-            const fila = document.createElement('tr');
-            fila.innerHTML = `
-              <td>${{r.id}}</td>
-              <td>${{r.nombre}}</td>
-              <td>${{r.tipoResiduo}}</td>
-              <td>${{r.cantidadKg}}</td>
-              <td>${{r.semestre}}</td>
-              <td>${{r.carrera}}</td>
-              <td>${{r.puntoRecoleccion}}</td>
-            `;
-            tbody.appendChild(fila);
-          }});
-        }})
-        .catch(err => {{
-          alert("Error al cargar datos");
-          console.error(err);
-        }});
-    </script>
-    
   </div>
+
+  <script>
+    fetch('/api/residuos')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector('#tabla tbody');
+        const msg = document.getElementById('msg');
+
+        if (data.length === 0) {
+          msg.textContent = "No hay residuos registrados.";
+          return;
+        }
+
+        data.forEach(r => {
+          const fila = document.createElement('tr');
+          fila.innerHTML = `
+            <td>${r.id}</td>
+            <td>${r.nombre}</td>
+            <td>${r.tipoResiduo}</td>
+            <td>${r.cantidadKg}</td>
+            <td>${r.semestre}</td>
+            <td>${r.carrera}</td>
+            <td>${r.puntoRecoleccion}</td>
+          `;
+          tbody.appendChild(fila);
+        });
+      })
+      .catch(err => {
+        alert("Error al cargar datos");
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
