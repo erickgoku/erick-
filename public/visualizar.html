@@ -5,13 +5,13 @@
   <title>Visualizar Registros</title>
   <style>
     body {
-      background-color: #e8f0fe;
+      background-color: #f1f8e9;
       font-family: Arial, sans-serif;
-      color: #003366;
+      color: #2e7d32;
       padding: 20px;
     }
     h2 {
-      color: #1a237e;
+      color: #33691e;
     }
     table {
       width: 100%;
@@ -22,17 +22,17 @@
     }
     th, td {
       padding: 10px;
-      border: 1px solid #90caf9;
+      border: 1px solid #a5d6a7;
       text-align: left;
     }
     th {
-      background-color: #1976d2;
+      background-color: #43a047;
       color: white;
     }
     a {
       display: inline-block;
       margin-top: 20px;
-      color: #1976d2;
+      color: #43a047;
       text-decoration: none;
     }
     a:hover {
@@ -41,21 +41,22 @@
     #msg {
       margin-top: 15px;
       font-weight: bold;
-      color: #d32f2f;
+      color: #c62828;
     }
   </style>
 </head>
 <body>
-  <h2>Visualización de Alumnos</h2>
+  <h2>Visualización de Residuos</h2>
   <table id="tabla">
     <thead>
       <tr>
         <th>ID</th>
         <th>Nombre</th>
-        <th>Carrera</th>
-        <th>Residuo</th>
+        <th>Tipo</th>
         <th>Cantidad (kg)</th>
         <th>Semestre</th>
+        <th>Carrera</th>
+        <th>Punto de Recolección</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -65,26 +66,27 @@
   <a href="index.html">Volver al menú</a>
 
   <script>
-    fetch('/api/alumnos')
+    fetch('/api/residuos')
       .then(res => res.json())
       .then(data => {
         const tbody = document.querySelector('#tabla tbody');
         const msg = document.getElementById('msg');
 
         if (data.length === 0) {
-          msg.textContent = "No hay alumnos registrados.";
+          msg.textContent = "No hay residuos registrados.";
           return;
         }
 
-        data.forEach(a => {
+        data.forEach(r => {
           const fila = document.createElement('tr');
           fila.innerHTML = `
-            <td>${a.id}</td>
-            <td>${a.nombre}</td>
-            <td>${a.carrera}</td>
-            <td>${a.tipoResiduo}</td>
-            <td>${a.cantidadKg}</td>
-            <td>${a.semestre}</td>
+            <td>${r.id}</td>
+            <td>${r.nombre}</td>
+            <td>${r.tipoResiduo}</td>
+            <td>${r.cantidadKg}</td>
+            <td>${r.semestre}</td>
+            <td>${r.carrera}</td>
+            <td>${r.puntoRecoleccion}</td>
           `;
           tbody.appendChild(fila);
         });
@@ -96,4 +98,3 @@
   </script>
 </body>
 </html>
-

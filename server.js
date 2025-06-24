@@ -6,19 +6,16 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB Atlas - Conexión persistente
 const client = new MongoClient(process.env.MONGODB_URI);
 let db;
 
-// 👉 Conexión única al iniciar el servidor
 async function conectarDB() {
   try {
     await client.connect();
-    db = client.db("paec"); // 👈 usa la base de datos correcta
+    db = client.db("paec");
     console.log('✅ Conectado a MongoDB Atlas');
   } catch (err) {
     console.error('❌ Error al conectar a MongoDB:', err);
@@ -26,57 +23,52 @@ async function conectarDB() {
   }
 }
 
-// 👉 Ruta: Obtener todos los alumnos
-app.get('/api/alumnos', async (req, res) => {
+app.get('/api/residuos', async (req, res) => {
   try {
-    const alumnos = await db.collection('proyecto').find().toArray();
-    res.json(alumnos);
+    const residuos = await db.collection('proyecto').find().toArray();
+    res.json(residuos);
   } catch (err) {
     console.error('❌ Error en GET:', err);
     res.status(500).json({ error: 'Error al obtener datos' });
   }
 });
 
-// 👉 Ruta: Alta de un nuevo alumno
-app.post('/api/alumnos', async (req, res) => {
+app.post('/api/residuos', async (req, res) => {
   try {
     const col = db.collection('proyecto');
     const nuevo = req.body;
 
-    if (!nuevo.nombre || !nuevo.carrera || !nuevo.tipoResiduo || !nuevo.cantidadKg || !nuevo.semestre) {
+    if (!nuevo.nombre || !nuevo.tipoResiduo || !nuevo.cantidadKg || !nuevo.semestre || !nuevo.carrera || !nuevo.puntoRecoleccion) {
       return res.status(400).json({ error: 'Campos incompletos' });
     }
 
-    // Asignar un ID tipo A001, A002...
     const total = await col.countDocuments();
-    nuevo.id = `A${(total + 1).toString().padStart(3, '0')}`;
+    nuevo.id = `R${(total + 1).toString().padStart(3, '0')}`;
 
     await col.insertOne(nuevo);
-    res.status(201).json({ mensaje: 'Alumno insertado' });
+    res.status(201).json({ mensaje: 'Residuo insertado' });
   } catch (err) {
     console.error('❌ Error en POST:', err);
-    res.status(500).json({ error: 'Error al insertar alumno' });
+    res.status(500).json({ error: 'Error al insertar residuo' });
   }
 });
 
-// 👉 Ruta: Eliminar alumno por ID
-app.delete('/api/alumnos/:id', async (req, res) => {
+app.delete('/api/residuos/:id', async (req, res) => {
   try {
     const resultado = await db.collection('proyecto').deleteOne({ id: req.params.id });
 
     if (resultado.deletedCount === 0) {
-      return res.status(404).json({ error: 'Alumno no encontrado' });
+      return res.status(404).json({ error: 'Residuo no encontrado' });
     }
 
-    res.json({ mensaje: 'Alumno eliminado' });
+    res.json({ mensaje: 'Residuo eliminado' });
   } catch (err) {
     console.error('❌ Error en DELETE:', err);
-    res.status(500).json({ error: 'Error al eliminar alumno' });
+    res.status(500).json({ error: 'Error al eliminar residuo' });
   }
 });
 
-// 👉 Ruta: Actualizar alumno por ID
-app.put('/api/alumnos/:id', async (req, res) => {
+app.put('/api/residuos/:id', async (req, res) => {
   try {
     const actualizado = req.body;
 
@@ -86,25 +78,22 @@ app.put('/api/alumnos/:id', async (req, res) => {
     );
 
     if (result.matchedCount === 0) {
-      return res.status(404).json({ error: 'Alumno no encontrado' });
+      return res.status(404).json({ error: 'Residuo no encontrado' });
     }
 
-    res.json({ mensaje: 'Alumno actualizado' });
+    res.json({ mensaje: 'Residuo actualizado' });
   } catch (err) {
     console.error('❌ Error en PUT:', err);
-    res.status(500).json({ error: 'Error al actualizar alumno' });
+    res.status(500).json({ error: 'Error al actualizar residuo' });
   }
 });
 
-// 👉 Ruta raíz
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 🟢 Conectar a DB y levantar servidor
 conectarDB().then(() => {
   app.listen(port, () => {
     console.log(`🚀 Servidor en puerto: ${port}`);
   });
 });
-
